@@ -13,12 +13,28 @@
 
 - name: Update APT package cache
   action: apt update_cache=yes
+  when: ansible_os_family == "Debian"
+  tags:
+    - bika-base
+    - bika-apt
+- name: Update YUM package cache
+  action: yum update_cache=yes
+  when: ansible_os_family == "RedHat"
   tags:
     - bika-base
     - bika-apt
 
 - name: Upgrade APT to the lastest packages
   action: apt upgrade=full
+  when: ansible_os_family == "Debian"
+#  notify: reboot
+  tags:
+    - bika-base
+    - bika-apt
+
+- name: Upgrade YUM to the lastest packages
+  action: yum upgrade=full
+  when: ansible_os_family == "RedHat"
 #  notify: reboot
   tags:
     - bika-base
@@ -54,5 +70,6 @@
     owner: root
     group: root
     mode: 0644
+  when: ansible_os_family == "Debian"
   tags:
     - bika-base
